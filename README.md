@@ -3,6 +3,10 @@
 <img src="https://img.shields.io/github/languages/count/yangt21/api-login?logo=github&style=flat-square">
 <img src="https://img.shields.io/github/forks/yangt21/api-login?logo=github&style=flat-square">
 
+<hr>
+
+<img alt="EmailScreenshoot" title="EmailScreenshoot" src="./src/main/resources/assets/brd.png" width="1000px">
+
 # LOGIN API
 
 Login and registration system with email verification and token authentication.
