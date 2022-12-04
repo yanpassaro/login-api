@@ -1,6 +1,7 @@
 package com.example.apilogin.domain.dto;
 
-import jakarta.validation.constraints.*;
+
+import javax.validation.constraints.*;
 
 import static org.springframework.util.Base64Utils.encodeToString;
 

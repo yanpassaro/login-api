@@ -1,26 +1,29 @@
 package com.example.apilogin.domain.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
 import lombok.*;
 import org.hibernate.Hibernate;
 
+import javax.persistence.*;
 import java.util.Objects;
+
+import static javax.persistence.GenerationType.AUTO;
 
 @Entity
 @Getter
 @Setter
 @ToString
-@RequiredArgsConstructor
+@AllArgsConstructor
+@NoArgsConstructor
 @Builder
+@Table(name = "user_")
 public class User {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
+    @GeneratedValue(strategy = AUTO)
     private Long id;
+    private String name;
     private String login;
     private String password;
+    private boolean locked;
 
     @Override
     public boolean equals(Object o) {

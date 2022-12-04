@@ -8,11 +8,12 @@ import com.example.apilogin.exception.IncorrectCredentialsException;
 import com.example.apilogin.exception.NotAuthorizedException;
 import com.example.apilogin.service.AuthService;
 import com.example.apilogin.service.UserService;
-import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
+import javax.mail.MessagingException;
+import javax.validation.Valid;
 import java.util.UUID;
 
 import static java.time.LocalDate.now;
@@ -42,8 +43,8 @@ public class UserController {
     @PostMapping("/register")
     @ResponseStatus(OK)
     public ResponseEntity<Response<Object>> register(@RequestBody @Valid UserDTO userDTO)
-            throws NotAuthorizedException {
-
+            throws IncorrectCredentialsException, MessagingException {
+        userService.register(userDTO);
         return ResponseEntity.ok().body(Response.builder()
                 .date(now())
                 .status(OK).statusCode(OK.value())
@@ -61,6 +62,19 @@ public class UserController {
                         .date(now())
                         .status(OK).statusCode(OK.value())
                         .data(userToken)
+                        .build()
+        );
+    }
+
+    @GetMapping ("/confirm")
+    public ResponseEntity<Response<Object>> confirm(@RequestParam("id") Long id)
+            throws NotAuthorizedException {
+        authService.confirmation(id);
+        return ResponseEntity.ok().body(
+                Response.builder()
+                        .date(now())
+                        .status(OK).statusCode(OK.value())
+                        .message("Successful confirmation")
                         .build()
         );
     }

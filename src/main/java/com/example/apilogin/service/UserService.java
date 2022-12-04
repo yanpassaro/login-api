@@ -2,16 +2,19 @@ package com.example.apilogin.service;
 
 import com.example.apilogin.domain.dto.UserDTO;
 import com.example.apilogin.domain.entity.User;
+import com.example.apilogin.domain.entity.Verification;
 import com.example.apilogin.domain.model.Email;
 import com.example.apilogin.exception.IncorrectCredentialsException;
+import com.example.apilogin.repository.EmailRepository;
 import com.example.apilogin.repository.UserRepository;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.util.UUID;
+import javax.mail.MessagingException;
+
+import static java.time.LocalDate.now;
 
 @Slf4j
 @Service
@@ -19,9 +22,10 @@ import java.util.UUID;
 public class UserService {
     final UserRepository userRepository;
     final EmailSenderService emailSenderService;
+    final EmailRepository emailRepository;
 
     @Transactional
-    public void register(UserDTO userDTO) throws IncorrectCredentialsException {
+    public void register(UserDTO userDTO) throws IncorrectCredentialsException, MessagingException {
         if (userRepository.existsByLogin(userDTO.login())) {
             log.warn("Registration attempt failed");
             throw new IncorrectCredentialsException("User has already been registered");
@@ -31,13 +35,21 @@ public class UserService {
                 User.builder()
                         .login(userDTO.login())
                         .password(userDTO.password())
+                        .name(userDTO.name())
+                        .locked(true)
                         .build()
         );
-        emailSenderService.sendEmail(
+        emailRepository.save(
+                Verification.builder()
+                        .id(user.getId())
+                        .date(now())
+                        .build()
+        );
+        emailSenderService.sendConfirmation(
                 Email.builder()
                         .destiny(user.getLogin())
-                        .subject("Welcome to our system")
-                        .content("The registration was carried out successfully")
+                        .subject("Welcome to our system " + user.getName())
+                        .content(emailSenderService.emailModel(user.getId()))
                         .build()
         );
     }
@@ -45,7 +57,7 @@ public class UserService {
     @Transactional
     public void update(UserDTO userDTO, Long id) throws IncorrectCredentialsException {
         if (!userRepository.existsById(id))
-            throw new IncorrectCredentialsException("Usuário não cadastrado");
+            throw new IncorrectCredentialsException("Unregistered user");
         log.info("Updating user {}", userDTO);
         User user = userRepository.findUserById(id);
         userRepository.save(
@@ -53,6 +65,8 @@ public class UserService {
                         .id(id)
                         .login(user.getLogin())
                         .password(user.getPassword())
+                        .name(userDTO.name())
+                        .locked(false)
                         .build()
         );
         emailSenderService.sendEmail(
@@ -64,7 +78,6 @@ public class UserService {
         );
     }
 
-    @Async
     @Transactional
     public void delete(Long id) throws IncorrectCredentialsException {
         if (!userRepository.existsById(id))
