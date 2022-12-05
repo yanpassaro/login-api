@@ -49,7 +49,20 @@ I recommend using Docker to install and run the above databases and services.
 
 > Right after configure the profile that will be used in the application startup for the dev profile
 
-#### Go to http://localhost:8080/api/v1/user/register
+#### Go to	
+
+	http://localhost:8080/api/v1/user/register
+
+## HTTP EndPoints
+
+| Method | Endpoint              | Function                   | Return       |
+|--------|-----------------------|----------------------------|--------------|
+| POST   | /api/v1/user/register | register a new user        |              |
+| GET    | /api/v1/user/confirm  | confirm email verification |              |
+| GET    | /api/v1/user/profile  | view user profile          | user profile |
+| POST   | /api/v1/user/login    | login                      | user token   |
+| PUT    | /api/v1/user/update   | update user                |              |
+| DELETE | /api/v1/user/delete   | delete user                |              |
     
 ## Screenshoots
 
@@ -64,4 +77,5 @@ I recommend using Docker to install and run the above databases and services.
 + [Spring Documentation](https://docs.spring.io/spring-boot/docs/current/reference/html/)
 + [PostgreSQL Documentation](https://www.postgresql.org/docs/)
 + [Redis Documentation](https://redis.io/docs/)
+
 
