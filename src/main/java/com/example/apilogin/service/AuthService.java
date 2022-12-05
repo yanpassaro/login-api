@@ -51,22 +51,4 @@ public class AuthService {
         return tokenRepository.findTokenById(user.getId())
                 .getToken();
     }
-
-    @Transactional
-    public void confirmation(Long id) throws NotAuthorizedException, IncorrectCredentialsException {
-        if (!emailRepository.existsById(id))
-            throw new NotAuthorizedException("Invalid confirmation");
-        User user = userRepository.findUserById(id);
-        if (!user.isLocked())
-            throw new IncorrectCredentialsException("Already confirmed");
-        userRepository.save(
-                User.builder()
-                        .id(id)
-                        .login(user.getLogin())
-                        .password(user.getPassword())
-                        .locked(false)
-                        .build()
-        );
-        emailRepository.deleteById(id);
-    }
 }

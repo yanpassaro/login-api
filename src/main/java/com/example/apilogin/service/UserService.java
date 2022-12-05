@@ -14,7 +14,10 @@ import org.springframework.transaction.annotation.Transactional;
 
 import javax.mail.MessagingException;
 
-import static java.time.LocalDate.now;
+import java.util.UUID;
+
+import static java.time.LocalTime.now;
+
 
 @Slf4j
 @Service
@@ -39,17 +42,18 @@ public class UserService {
                         .locked(true)
                         .build()
         );
-        emailRepository.save(
+        Verification verification = emailRepository.save(
                 Verification.builder()
                         .id(user.getId())
-                        .date(now())
+                        .verify(UUID.randomUUID())
+                        .expiredDate(now().plusMinutes(15))
                         .build()
         );
         emailSenderService.sendConfirmation(
                 Email.builder()
                         .destiny(user.getLogin())
                         .subject("Welcome to our system " + user.getName())
-                        .content(emailSenderService.emailModel(user.getId()))
+                        .content(emailSenderService.emailModel(verification.getVerify()))
                         .build()
         );
     }

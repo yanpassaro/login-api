@@ -11,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import javax.mail.MessagingException;
 import javax.mail.internet.MimeMessage;
+import java.util.UUID;
 
 @Slf4j
 @Service
@@ -39,7 +40,7 @@ public class EmailSenderService {
         mailSender.send(message);
     }
 
-    public String emailModel(Long id) {
+    public String emailModel(UUID token) {
         return "<!DOCTYPE html>\n" +
                 "<html lang=\"en\">\n" +
                 "<head>\n" +
@@ -58,7 +59,7 @@ public class EmailSenderService {
                 "      </p>\n" +
                 "      <hr style=\"border-top: 1px solid rgba(240,255,255,0.71);\">\n" +
                 "      <button type=\"button\" style=\"background: #535b62; color: #ffffff; border: 2px solid #535b62; border-radius: 3px;padding: 8px 7px;text-align: center;text-decoration: none;display: inline-block;font-size: 13px;\">\n" +
-                "        <a href=\"http://localhost:8080/api/v1/user/confirm?id="+id+"\" style=\"color: #ffffff; text-decoration-color: #535b62;font-family: sans-serif\">Active now</a>\n" +
+                "        <a href=\"http://localhost:8080/api/v1/user/confirm?token="+ token +"\" style=\"color: #ffffff; text-decoration-color: #535b62;font-family: sans-serif\">Active now</a>\n" +
                 "      </button>\n" +
                 "    </div>\n" +
                 "  </div>\n" +

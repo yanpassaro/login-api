@@ -2,11 +2,12 @@ package com.example.apilogin.controller;
 
 import com.example.apilogin.domain.dto.LoginDTO;
 import com.example.apilogin.domain.dto.UserDTO;
-import com.example.apilogin.domain.redis.Token;
 import com.example.apilogin.domain.model.Response;
+import com.example.apilogin.domain.redis.Token;
 import com.example.apilogin.exception.IncorrectCredentialsException;
 import com.example.apilogin.exception.NotAuthorizedException;
 import com.example.apilogin.service.AuthService;
+import com.example.apilogin.service.ConfirmService;
 import com.example.apilogin.service.UserService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
@@ -26,17 +27,18 @@ import static org.springframework.http.HttpStatus.OK;
 public class UserController {
     final UserService userService;
     final AuthService authService;
-
+    final ConfirmService confirmation;
 
     @GetMapping("/profile")
     @ResponseStatus(OK)
     public ResponseEntity<Response<Object>> profile(@RequestHeader("token") UUID token)
-            throws NotAuthorizedException {
+            throws NotAuthorizedException, IncorrectCredentialsException {
         Token auth = authService.authenticate(token);
         return ResponseEntity.ok().body(Response.builder()
                 .date(now())
                 .status(OK).statusCode(OK.value())
                 .message("Showing user")
+                .data(userService.toView(auth.getId()))
                 .build());
     }
 
@@ -52,7 +54,6 @@ public class UserController {
                 .build());
     }
 
-
     @PostMapping ("/login")
     public ResponseEntity<Response<Object>> login(@RequestBody @Valid LoginDTO loginDTO)
             throws NotAuthorizedException {
@@ -66,10 +67,10 @@ public class UserController {
         );
     }
 
-    @GetMapping ("/confirm")
-    public ResponseEntity<Response<Object>> confirm(@RequestParam("id") Long id)
-            throws NotAuthorizedException {
-        authService.confirmation(id);
+    @GetMapping("/confirm")
+    public ResponseEntity<Response<Object>> confirm(@RequestParam("token") UUID token)
+            throws NotAuthorizedException, IncorrectCredentialsException, MessagingException {
+        confirmation.confirmation(token);
         return ResponseEntity.ok().body(
                 Response.builder()
                         .date(now())
@@ -79,5 +80,31 @@ public class UserController {
         );
     }
 
+    @DeleteMapping("/delete")
+    public ResponseEntity<Response<Object>> delete(@RequestParam("token") UUID token)
+            throws NotAuthorizedException, IncorrectCredentialsException {
+        Token userToken = authService.authenticate(token);
+        userService.delete(userToken.getId());
+        return ResponseEntity.ok().body(
+                Response.builder()
+                        .date(now())
+                        .status(OK).statusCode(OK.value())
+                        .message("Successfully deleted")
+                        .build()
+        );
+    }
 
+    @PutMapping("/update")
+    public ResponseEntity<Response<Object>> update(@RequestBody UserDTO userDTO, @RequestParam("token") UUID token)
+            throws NotAuthorizedException, IncorrectCredentialsException {
+        Token userToken = authService.authenticate(token);
+        userService.update(userDTO, userToken.getId());
+        return ResponseEntity.ok().body(
+                Response.builder()
+                        .date(now())
+                        .status(OK).statusCode(OK.value())
+                        .message("Successfully updated")
+                        .build()
+        );
+    }
 }
