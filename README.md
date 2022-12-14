@@ -1,7 +1,7 @@
 <p align="center">
-<img src="https://img.shields.io/github/contributors/yanpassaro/login-and-register?logo=github&color=gree&style=flat-square">
-<img src="https://img.shields.io/github/languages/count/yanpassaro/login-and-register?logo=github&style=flat-square">
-<img src="https://img.shields.io/github/forks/yanpassaro/login-and-register?logo=github&style=flat-square">
+<img src="https://img.shields.io/github/contributors/yanpassaro/login-api?logo=github&color=gree&style=flat-square">
+<img src="https://img.shields.io/github/languages/count/yanpassaro/login-api?logo=github&style=flat-square">
+<img src="https://img.shields.io/github/forks/yanpassaro/login-api?logo=github&style=flat-square">
 
 <hr>
 
@@ -34,8 +34,8 @@ I recommend using Docker to install and run the above databases and services.
 
 ## How to install
 
-	git clone https://github.com/yanpassaro/login-and-register
-	cd login-and-register
+	git clone https://github.com/yanpassaro/login-api
+	cd login-api
 
 ## How to configure
 
