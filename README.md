@@ -5,8 +5,6 @@
 
 <hr>
 
-<img alt="EmailScreenshoot" title="EmailScreenshoot" src="./src/main/resources/assets/brd.png" width="1000px">
-
 # LOGIN API
 
 Login and registration system with email verification and token authentication.
