@@ -64,11 +64,11 @@ I recommend using Docker to install and run the above databases and services.
     
 ## Screenshoots
 
-<img alt="PostmanScreenshoot" title="PostmanScreenshoot" src="assets/postman.png">
+<img alt="PostmanScreenshoot" title="PostmanScreenshoot" src=".assets/postman.png">
 
 #### Email confirmation
 
-<img alt="EmailScreenshoot" title="EmailScreenshoot" src="assets/email.png">
+<img alt="EmailScreenshoot" title="EmailScreenshoot" src=".assets/email.png">
   
 ## References
 
